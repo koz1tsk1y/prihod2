@@ -1,0 +1,10 @@
+{
+  "description": "Познакомьтесь с храмом Рождества Христова в Бресте, узнайте расписание богослужений и последние события, откройте православный календарь и полезные ссылки.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
