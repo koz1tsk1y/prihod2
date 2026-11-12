@@ -12,14 +12,26 @@ export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
   const emitSourcemaps = mode === 'development'
 
+  // База для ассетов.
+  //  - FIGMA_PUBLIC_URL — если задан (например, в Figma Make или в CI).
+  //  - GITHUB_ACTIONS     — сборка в CI GitHub Actions → /prihod2/dist/
+  //  - иначе              — локальная разработка / preview → '/'
+  //
+  // ВАЖНО: трейлинг-слэш в конце обязателен — этого требует Vite.
+  const base = process.env.FIGMA_PUBLIC_URL
+    ? `${process.env.FIGMA_PUBLIC_URL.replace(/\/+$/, '')}/`
+    : process.env.GITHUB_ACTIONS
+      ? '/prihod2/dist/'
+      : '/'
+
   return {
-    base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
+    base,
     build: {
       sourcemap: emitSourcemaps ? 'inline' : false,
       minify: !emitSourcemaps,
     },
     plugins: [
-react(),
+      react(),
       tailwindcss(),
       figmaSiteConfiguration(siteConfiguration),
       figmaErrorOverlayReplay(),
@@ -39,7 +51,7 @@ react(),
       watch: {
         ignored: [
           '**/.figma/**',
-],
+        ],
       },
     },
     preview: {
